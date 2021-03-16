@@ -13,7 +13,8 @@ public class PlayerController : MonoBehaviour
     
     private InputAction movement;
     private InputAction fire;
-    
+
+    private Vector3 playerMov;
  
     private void Awake()
     {
@@ -30,13 +31,17 @@ public class PlayerController : MonoBehaviour
         PlayeRigidbody = Player.GetComponent<Rigidbody>();
     }
 
+    private void FixedUpdate()
+    {
+        PlayeRigidbody.MovePosition(PlayeRigidbody.position + playerMov * playerspeed * Time.fixedDeltaTime);
+    }
     private void OnMove(InputAction.CallbackContext context)
     {
         var direction = context.ReadValue<Vector2>();
  
         // Code that moves the player based on the direction
-        var playermov = new Vector3(direction.x, 0f, direction.y);
-        PlayeRigidbody.MovePosition(PlayeRigidbody.position + playermov * playerspeed * Time.fixedDeltaTime);
+        playerMov = new Vector3(direction.x, 0f, direction.y);
+
         // Player.transform.position += playermov;
     }
     
