@@ -6,37 +6,33 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    private playerinput input;
-    private Vector3 moveVec;
-    private bool jumping = false;
-    
+    public InputActionAsset playerControls;
+    public GameObject Player;
+    private InputAction movement;
+    private InputAction fire;
+ 
+    private void Awake()
+    {
+        var gameplayActionMap = playerControls.FindActionMap("Player");
+ 
+        movement = gameplayActionMap.FindAction("Move");
+        movement.performed += OnMove;
+        movement.canceled += OnMove;
+        movement.Enable();
+    }
 
     private void Start()
     {
+        throw new NotImplementedException();
     }
 
-    private void FixedUpdate()
+    private void OnMove(InputAction.CallbackContext context)
     {
-        // 1
-        float speedX = Input.GetAxisRaw("Horizontal");  // Left, Right
-        float speedY = Input.GetAxisRaw("Vertical");  // Back, Forward
-        moveVec = new Vector3(speedX, 0, speedY);
+        var direction = context.ReadValue<Vector2>();
+ 
+        // Code that moves the player based on the direction
+        var playermov = new Vector3(direction.x, 0f, direction.y);
+        Player.transform.position += playermov;
     }
-
-    public void OnMove(InputValue input)
-    {
-        Vector2 inputVec = input.Get<Vector2>();
-
-        moveVec = new Vector3(inputVec.x, 0, inputVec.y);
-    }
-
-    private void OnEnable()
-    {
-        input.Player.Enable();
-    }
-
-    private void OnDisable()
-    {
-        input.Player.Disable();
-    }
+    
 }
